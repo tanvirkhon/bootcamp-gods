@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 // Import ABI
 import { ABI, ADDRESS } from "../contract";
+import { createEventListeners } from "./createEventListeners";
 
 const GlobalContext = createContext();
 
@@ -21,10 +22,13 @@ export const GlobalContextProvider = ({ children }) => {
   const [contract, setContract] = useState("");
   const [provider, setProvider] = useState("");
   const [showAlert, setShowAlert] = useState({
-    status: "false",
+    status: false,
     type: "info",
     message: "",
   });
+
+  // Navigate function
+  const navigate = useNavigate();
 
   // Set the wallet address to the state
   const updateCurrentWalletAddress = async () => {
@@ -57,11 +61,24 @@ export const GlobalContextProvider = ({ children }) => {
     setSmartContractAndProvider();
   }, []);
 
+  // useEffect to create new player
+  useEffect(() => {
+    if (contract) {
+      createEventListeners({
+        navigate,
+        contract,
+        provider,
+        walletAddress,
+        setShowAlert,
+      });
+    }
+  }, [contract]);
+
   // Show alerts
   useEffect(() => {
     if (showAlert?.status) {
       const timer = setTimeout(() => {
-        setShowAlert({ status: "false", type: "info", message: "" });
+        setShowAlert({ status: false, type: "info", message: "" });
       }, [5000]);
 
       //Clear Timer
