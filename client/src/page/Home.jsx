@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Import Higher Order Component for components folder
 import { PageHOC, CustomInput, CustomButton } from "../components";
@@ -10,25 +11,42 @@ const Home = () => {
   //Set Player name
   const [playerName, setPlayerName] = useState("");
 
+  // Navigation
+  const navigate = useNavigate();
+
   //Handle Click event to find if player is connected with wallet
   const handleClick = async () => {
     try {
-      console.log({ contract });
       const playerExists = await contract.isPlayer(walletAddress);
 
       if (!playerExists) {
         await contract.registerPlayer(playerName, playerName);
 
         setShowAlert({
-          status: "true",
+          status: true,
           type: "info",
           message: `${playerName} is being summoned`,
         });
       }
     } catch (error) {
-      alert(error);
+      setShowAlert({
+        status: true,
+        type: "failure",
+        message: "Something went wrong",
+      });
     }
   };
+
+  // Check if player is connected with wallet and has a token
+  useEffect(() => {
+    const checkForPlayerToken = async () => {
+      const playerExists = await contract.isPlayer(walletAddress);
+      const playerTokenExist = await contract.getPlayerToken(walletAddress);
+
+      if (playerExists && playerTokenExist) navigate("/create-battle");
+    };
+    if (contract) checkForPlayerToken();
+  }, [contract]);
 
   return (
     <div className="flex flex-col">
