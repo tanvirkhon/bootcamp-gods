@@ -39,18 +39,17 @@ const Battle = () => {
           gameData.activeBattle.players[0].toLowerCase() ===
           walletAddress.toLowerCase()
         ) {
-          player01Address = gameData.activeBattle.player[0];
-          player02Address = gameData.activeBattle.player[1];
+          player01Address = gameData.activeBattle.players[0];
+          player02Address = gameData.activeBattle.players[1];
         } else {
-          player01Address = gameData.activeBattle.player[1];
-          player02Address = gameData.activeBattle.player[0];
+          player01Address = gameData.activeBattle.players[1];
+          player02Address = gameData.activeBattle.players[0];
         }
 
         const p1TokenData = await contract.getPlayerToken(player01Address);
         const player01 = await contract.getPlayer(player01Address);
         const player02 = await contract.getPlayer(player02Address);
 
-        // Player info
         const p1Att = p1TokenData.attackStrength.toNumber();
         const p1Def = p1TokenData.defenseStrength.toNumber();
         const p1H = player01.playerHealth.toNumber();
@@ -67,7 +66,7 @@ const Battle = () => {
         });
         setPlayer2({ ...player02, att: "X", def: "X", health: p2H, mana: p2M });
       } catch (error) {
-        console.log(error);
+        setErrorMessage(error.message);
       }
     };
 
