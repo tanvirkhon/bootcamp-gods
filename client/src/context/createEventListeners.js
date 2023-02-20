@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 
 import { ABI } from "../contract";
-import { playAudio, sparcle } from "../utils/animation.js";
+import { playAudio, sparcle } from "../utils/animation";
 import { defenseSound } from "../assets";
 
 const AddNewEvent = (eventFilter, provider, cb) => {
