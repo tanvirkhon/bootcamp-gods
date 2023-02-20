@@ -74,9 +74,7 @@ export const GlobalContextProvider = ({ children }) => {
     const accounts = await window.ethereum.request({
       method: "eth_accounts",
     });
-    console.log(accounts);
     if (accounts) setWalletAddress(accounts[0]);
-    console.log(accounts);
   };
 
   useEffect(() => {
@@ -110,6 +108,8 @@ export const GlobalContextProvider = ({ children }) => {
         walletAddress,
         setShowAlert,
         setUpdateGameData,
+        player1Ref,
+        player2Ref,
       });
     }
   }, [contract, step]);
@@ -188,6 +188,7 @@ export const GlobalContextProvider = ({ children }) => {
         setErrorMessage,
         player1Ref,
         player2Ref,
+        updateCurrentWalletAddress,
       }}>
       {children}
     </GlobalContext.Provider>

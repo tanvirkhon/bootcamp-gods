@@ -81,7 +81,9 @@ const Battle = () => {
     playAudio(choice === 1 ? attackSound : defenseSound);
 
     try {
-      await contract.attackOrDefendChoice(choice, battleName);
+      await contract.attackOrDefendChoice(choice, battleName, {
+        gasLimit: 200000,
+      });
 
       setShowAlert({
         status: true,
@@ -93,6 +95,14 @@ const Battle = () => {
     }
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!gameData?.activeBattle) navigate("/");
+    }, [2000]);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div
       className={`${styles.flexBetween} ${styles.gameContainer} ${battleGround}`}>
@@ -103,7 +113,12 @@ const Battle = () => {
       <PlayerInfo player={player2} playerIcon={player02Icon} mt />
 
       <div className={`${styles.flexCenter} flex-col my-10`}>
-        <Card card={player2} title={player2?.playerName} cardRef={player2Ref} playerTwo />
+        <Card
+          card={player2}
+          title={player2?.playerName}
+          cardRef={player2Ref}
+          playerTwo
+        />
 
         <div className="flex items-center flex-row">
           <ActionButton
